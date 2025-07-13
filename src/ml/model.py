@@ -3,12 +3,19 @@ Readmission model loading and prediction logic.
 """
 
 import joblib
+import logging
 import numpy as np
 import os
 
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(
     MODULE_DIR, "..", "..", "ml_model", "xgboost_readmission_model.joblib"
+)
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,  # Set minimum level to INFO
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
 
@@ -29,5 +36,5 @@ class ReadmissionModel:
         returns: Predicted probability of readmission (0.0–1.0).
         """
         X = np.array([features])
-        print("Input features to model:", X)
+        logger.info("Input features to model:", X)
         return float(self.model.predict_proba(X)[0][1])

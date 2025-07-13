@@ -6,6 +6,7 @@ and (by default) the first 2 rows of selected tables in a given schema.
 """
 
 import argparse
+import logging
 import yaml
 from db.connection import create_db_connection
 from tabulate import tabulate
@@ -18,6 +19,12 @@ DEFAULT_TABLES = [
     "procedures",
     "encounters",
 ]
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,  # Set minimum level to INFO
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
 
 
 def _arg_parse():
@@ -73,7 +80,7 @@ def _check_table_exists(conn, schema_name: str, table_name: str) -> bool:
     try:
         return conn.execute(query).iloc[0, 0] > 0
     except Exception as e:
-        print(f"❌ check_table_exists failed: {e}")
+        logger.info(f"❌ check_table_exists failed: {e}")
         return False
 
 
@@ -109,12 +116,12 @@ def _preview_table(conn, schema_name: str, table_name: str, limit: int):
     returns: None
     """
     query = f"SELECT * FROM {schema_name}.{table_name} LIMIT {limit}"
-    print(f"\n📋 Previewing {schema_name}.{table_name}:")
+    logger.info(f"\n📋 Previewing {schema_name}.{table_name}:")
     try:
         df = conn.execute(query)
-        print(df)
+        logger.info(df)
     except Exception as e:
-        print(f"❌ Error reading {table_name}: {e}")
+        logger.info(f"❌ Error reading {table_name}: {e}")
 
 
 if __name__ == "__main__":
