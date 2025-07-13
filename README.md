@@ -139,5 +139,5 @@ We created synthetic healthcare data for 1,000 patients using the Synthea projec
 
 ## Contributions and Support
 Contributions are welcome via issues or pull requests.
-Contact Kevin Winkler
-Email: kevin.winkler1@gmail.com
+- Contact Kevin Winkler
+- Email: kevin.winkler1@gmail.com
