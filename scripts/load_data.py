@@ -16,6 +16,10 @@ import yaml
 from db.connection import create_db_connection
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,  # Set minimum level to INFO
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
 
 
 def _arg_parse():
@@ -83,7 +87,7 @@ if __name__ == "__main__":
     # Check if the CSV files exist
     csv_files = glob.glob(os.path.join(csv_dir, "*.csv"))
     if not csv_files:
-        print(f"No CSV files found in {csv_dir}")
+        logger.info(f"No CSV files found in {csv_dir}")
         sys.exit(1)
 
     # Create schema if not exists
@@ -94,4 +98,4 @@ if __name__ == "__main__":
     for csv_file in csv_files:
         table_name = os.path.splitext(os.path.basename(csv_file))[0]
         _load_csv_to_db(conn, csv_file, schema_name=schema_name, table_name=table_name)
-    print("All files loaded!")
+    logger.info("All files loaded!")
