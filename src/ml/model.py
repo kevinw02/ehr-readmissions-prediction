@@ -12,12 +12,6 @@ MODEL_PATH = os.path.join(
     MODULE_DIR, "..", "..", "ml_model", "xgboost_readmission_model.joblib"
 )
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(
-    level=logging.INFO,  # Set minimum level to INFO
-    format="%(asctime)s - %(levelname)s - %(message)s",
-)
-
 
 class ReadmissionModel:
     def __init__(self, model_path=MODEL_PATH):
@@ -36,5 +30,5 @@ class ReadmissionModel:
         returns: Predicted probability of readmission (0.0–1.0).
         """
         X = np.array([features])
-        logger.info("Input features to model:", X)
+        print("Input features to model:", X)
         return float(self.model.predict_proba(X)[0][1])
