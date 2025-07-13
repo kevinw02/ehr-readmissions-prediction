@@ -89,21 +89,24 @@ conda activate ehrml
 
 
 ## Project Structure
-.
-├── app/                  # Streamlit demo app for interactive model testing
-├── data/                 # Configuration files and raw CSV data (from Synthea)
-├── data_model/           # DDL scripts for creating schema, tables, and loading data
-├── docker-compose.yml    # Docker Compose config for API and Streamlit app
-├── Dockerfile            # Dockerfile for API server container
-├── Dockerfile.streamlit  # Dockerfile for Streamlit demo container
-├── .dockerignore         # Docker ignore file
-├── environment.yml       # Conda environment with all dependencies
-├── ml_model/             # Serialized and saved ML model files
-├── scripts/              # Utility scripts for data loading, schema creation, validation, and training
-├── src/                  # Core source code: database connection, ML utilities, and API logic
-├── test/                 # Pytest test cases for end-to-end testing
-├── .gitignore            # Git ignore file
-└── README.md             # This file
+
+- `app/` – Streamlit demo app for interactive model testing  
+- `data/` – Configuration files and raw CSV data (from Synthea)  
+- `data_model/` – DDL scripts for schema creation, table definitions, and data loading  
+- `docker-compose.yml` – Docker Compose config for running API and Streamlit containers  
+- `Dockerfile` – Dockerfile for the FastAPI model serving container  
+- `Dockerfile.streamlit` – Dockerfile for the Streamlit UI container  
+- `.dockerignore` – Excludes unnecessary files from Docker builds  
+- `environment.yml` – Conda environment file with dependencies  
+- `ml_model/` – Directory for saved/serialized trained models  
+- `scripts/` – Utility scripts for data loading, validation, and training  
+- `src/` – Core source code:
+  - `src/api/` – FastAPI app and route definitions  
+  - `src/db/` – DuckDB database connectors and query utilities  
+  - `src/ml/` – Model training, feature engineering, and inference  
+- `test/` – Pytest unit and integration tests  
+- `.gitignore` – Git ignore rules  
+- `README.md` – Project documentation (this file)
 
 
 ## How To Run
