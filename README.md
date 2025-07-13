@@ -44,11 +44,26 @@ cd ehr-readmissions-prediction
 conda env create -f environment.yml
 conda activate ehrml
 ```
-3. Set PYTHONPATH: `export PYTHONPATH=$PWD/src:$PYTHONPATH`
-4. Load raw data from csv files: `python scripts/load_data.py`
-5. (Optional) Validate raw data load: `python scripts/validate_data.py`
-6. Build data models for dimensional attributes and feature store: `python scripts/build_schema.py`
-7. Build and train ML models for prediction: `python scripts/train_model.py`
+3. Set PYTHONPATH: 
+```bash
+export PYTHONPATH=$PWD/src:$PYTHONPATH
+```
+4. Load raw data from csv files: 
+```bash
+python scripts/load_data.py
+```
+5. (Optional) Validate raw data load: 
+```bash
+python scripts/validate_data.py
+```
+6. Build data models for dimensional attributes and feature store: 
+```bash
+python scripts/build_schema.py
+```
+7. Build and train ML models for prediction: 
+```bash
+python scripts/train_model.py
+```
 Note: SHAP visualizations suggest that some features may be irrelevant in the current model. However, they are retained in this example because with a larger dataset (e.g., more than 1,000 synthetic patients), these features might show stronger predictive value.
 
 ## How To Run
