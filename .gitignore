@@ -1,0 +1,90 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Conda environments
+.env
+.conda
+env/
+venv/
+*.env
+*.conda
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Pytest cache
+.pytest_cache/
+
+# VS Code / IDE settings
+.vscode/
+.idea/
+*.swp
+
+# Data artifacts
+*.csv
+*.tsv
+*.parquet
+*.h5
+*.db
+*.sqlite
+*.feather
+*.sav
+*.dta
+*.rds
+*.arrow
+*.orc
+*.duckdb
+
+# Model artifacts
+*.joblib
+*.pkl
+*.pt
+*.onnx
+*.h5
+*.pb
+
+# Logs
+*.log
+*.out
+*.err
+
+# Build and distribution artifacts
+build/
+dist/
+*.egg-info/
+
+# Docker artifacts
+*.dockerfile
+*.pid
+
+# Environment and config
+.envrc
+.env.*
+.env.local
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Unit test artifacts
+coverage.xml
+htmlcov/
+.tox/
+nosetests.xml
+test-output/
+junit-*.xml
+
+# Sphinx docs
+docs/_build/
+
+# mypy
+.mypy_cache/
+
+# Pyright
+pyrightconfig.json
+
+# Cache
+.cache/
+__pypackages__/
