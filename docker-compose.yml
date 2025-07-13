@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  ehrml-api:
+    image: ehrml-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - ehrml-network
+
+  ehrml-streamlit-demo:
+    image: ehrml-streamlit-demo
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    ports:
+      - "8501:8501"
+    environment:
+      - API_HOST=http://ehrml-api:8000
+    networks:
+      - ehrml-network
+
+networks:
+  ehrml-network:
+    driver: bridge

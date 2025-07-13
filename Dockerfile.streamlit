@@ -1,0 +1,21 @@
+# Use miniconda base image with Python 3.12 support
+FROM continuumio/miniconda3
+
+# Set working directory
+WORKDIR /app
+
+# Copy environment.yml and app
+COPY ./app/environment.yml .
+COPY ./app/demo.py ./demo.py
+
+# Create the conda environment and activate it
+RUN conda env create -f environment.yml
+
+# Make sure the environment is activated on container start
+SHELL ["conda", "run", "-n", "demo", "/bin/bash", "-c"]
+
+# Expose Streamlit default port
+EXPOSE 8501
+
+# Run the Streamlit app within the conda environment
+CMD ["conda", "run", "--no-capture-output", "-n", "demo", "streamlit", "run", "demo.py", "--server.port=8501", "--server.address=0.0.0.0"]
