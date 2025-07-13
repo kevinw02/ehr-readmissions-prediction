@@ -1,0 +1,142 @@
+# Healthcare ML Analytics with DuckDB
+
+This project demonstrates scalable machine learning and analytics workflows using DuckDB as the backend for fast, in-process analytics. It is designed to operate on synthetic or public healthcare datasets and is built to be modular, extensible, and secure. The synthetic EHR raw data was built from the 
+Synthea repo: https://github.com/synthetichealth/synthea and consists of all the files in data/csv. This data dump feels similar to data that I've worked
+with in real world scenarios. 
+
+Note: In a production or enterprise scenario, the csv data would not be included in this repo, other than maybe a small dump for testing. A better storage location would be in S3 or another cloud storage container.
+
+---
+
+## Features
+
+- Modular database connection interface with support for DuckDB
+- CLI utility to load CSV data into DuckDB from YAML configuration
+- Support for schema tracking and reproducible ingestion
+- Easily extendable for ML workflows and exploratory data analysis
+- Dimensional data modeling of healthcare data generated via Synthea
+- Feature store specifically designed for patient readmission prediction
+- Training and evaluation of Logistic Regression and XGBoost models
+- REST API for serving predictions built with FastAPI
+- Streamlit web app for interactive model testing
+- Containerized deployment via Docker with shared networking between API and demo app
+
+---
+
+## Requirements
+
+- Python 3.8+
+- [DuckDB](https://duckdb.org)
+- Conda (Miniconda or Anaconda recommended)
+- Docker (for containerized runs)
+
+---
+
+## Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/your-repo-name.git
+cd your-repo-name
+```
+
+### 2. Create conda environment
+
+```bash
+conda env create -f environment.yml
+conda activate ehrml
+```
+
+### 3. Set PYTHONPATH
+
+```bash
+export PYTHONPATH=$PWD/src:$PYTHONPATH
+```
+
+## Data Model
+
+### Dimension and Fact-like Tables
+
+| Table                          | Type      | Description                                                              |
+| ------------------------------ | --------- | ------------------------------------------------------------------------ |
+| `dimension.encounter_dim`      | Fact-like | One row per encounter; links to patient and multiple encounter lookups  |
+| `dimension.diagnosis_dim`      | Fact-like | Encounter-level diagnosis details, linked to encounters and diagnoses   |
+| `dimension.medication_dim`     | Fact-like | Encounter-level medication details                                       |
+| `dimension.procedure_dim`      | Fact-like | Encounter-level procedure details                                        |
+| `dimension.patient_dim`        | Dimension | One row per patient; links to gender, race, and ethnicity lookups        |
+
+### Lookup Tables
+
+| Table                          | Type      | Description                                                              |
+| ------------------------------ | --------- | ------------------------------------------------------------------------ |
+| `dimension.encounter_class_lookup` | Lookup | High-level classification of encounter (e.g., inpatient, outpatient)    |
+| `dimension.encounter_code_lookup`  | Lookup | Encounter code with description (e.g., SNOMED-CT encounter type)        |
+| `dimension.reason_code_lookup` | Lookup    | Reason for encounter (code and description)                             |
+| `dimension.diagnosis_lookup`   | Lookup    | Diagnosis codes and descriptions                                        |
+| `dimension.medication_lookup`  | Lookup    | Medication codes and descriptions                                       |
+| `dimension.procedure_lookup`   | Lookup    | Procedure codes and descriptions                                        |
+| `dimension.organization_lookup`| Lookup    | Organizations providing care                                            |
+| `dimension.provider_lookup`    | Lookup    | Providers linked to encounters                                          |
+| `dimension.payer_lookup`       | Lookup    | Insurance payers                                                        |
+| `dimension.gender_lookup`      | Lookup    | Normalized gender values (e.g., male, female, unknown)                   |
+| `dimension.race_lookup`        | Lookup    | Normalized race values                                                   |
+| `dimension.ethnicity_lookup`   | Lookup    | Normalized ethnicity values                                              |
+
+---
+
+**Notes:**  
+- Although some "fact-like" tables have a `_dim` suffix, the encounter, diagnosis, medication, and procedure tables behave like fact/event tables linked to encounters via surrogate keys. This design enables consistent referencing and flexible querying, while also improving performance in downstream applications as more flexible feature stores and data models can be developed using the integer keys.
+
+- Only a subset of the Synthea dataset is modeled here for demonstration. A full production environment would likely model more clinical domains and additional data.
+
+
+## Project Structure
+.
+├── app/                  # Streamlit demo app for interactive model testing
+├── data/                 # Configuration files and raw CSV data (from Synthea)
+├── data_model/           # DDL scripts for creating schema, tables, and loading data
+├── docker-compose.yml    # Docker Compose config for API and Streamlit app
+├── Dockerfile            # Dockerfile for API server container
+├── Dockerfile.streamlit  # Dockerfile for Streamlit demo container
+├── .dockerignore         # Docker ignore file
+├── environment.yml       # Conda environment with all dependencies
+├── ml_model/             # Serialized and saved ML model files
+├── scripts/              # Utility scripts for data loading, schema creation, validation, and training
+├── src/                  # Core source code: database connection, ML utilities, and API logic
+├── test/                 # Pytest test cases for end-to-end testing
+├── .gitignore            # Git ignore file
+└── README.md             # This file
+
+
+## How To Run
+### Via Docker Compose
+
+1. Build and start both the API and Streamlit demo containers with a shared network:
+
+```bash
+docker-compose up --build
+```
+Note: This will start two services:
+- API Server accessible at: http://localhost:8000
+- Streamlit Demo App accessible at: http://localhost:8501
+
+2. Stop the containers:
+```bash
+docker-compose down
+```
+
+## Tests
+### Unit tests
+1. Run via pytest: `pytest test`
+Note: Tests cover data loading, validation, model training, API endpoints, and other core functionality.
+### Data validation tests (manual)
+1. Run python script to ensure raw data load: `python3 scripts/validate_data.py`
+
+## Summary
+We created synthetic healthcare data for 1,000 patients using the Synthea project, then modeled this data dimensionally for analytics and built a feature store tailored for readmission prediction. Data was loaded into DuckDB for efficient querying. Two models—logistic regression and XGBoost—were trained and evaluated, selecting the best model for deployment. The system exposes a FastAPI-based prediction endpoint and a Streamlit demo app for easy interaction. The entire stack is containerized with Docker, facilitating easy deployment and testing.
+
+## Contributions and Support
+Contributions are welcome via issues or pull requests.
+For all questions, contact Kevin Winkler
+email: kevin.winkler1@gmail.com
