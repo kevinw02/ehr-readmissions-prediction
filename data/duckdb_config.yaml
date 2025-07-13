@@ -1,0 +1,2 @@
+db_type: duckdb
+database: ./data/ehr.duckdb
