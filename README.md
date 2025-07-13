@@ -36,8 +36,8 @@ Note: In a production or enterprise scenario, the csv data would not be included
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/YOUR_USERNAME/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/kevinw02/ehr-readmissions-prediction
+cd ehr-readmissions-prediction
 ```
 2. Create conda environment:
 ```bash
