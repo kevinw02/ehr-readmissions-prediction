@@ -39,7 +39,7 @@ def _arg_parse():
     parser.add_argument(
         "--schema",
         type=str,
-        default="clinical",
+        default="staging",
         help="Schema where tables are located.",
     )
     parser.add_argument(
