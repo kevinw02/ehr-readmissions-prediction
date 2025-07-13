@@ -49,10 +49,52 @@ conda activate ehrml
 5. (Optional) Validate raw data load: `python scripts/validate_data.py`
 6. Build data models for dimensional attributes and feature store: `python scripts/build_schema.py`
 7. Build and train ML models for prediction: `python scripts/train_model.py`
+Note: SHAP visualizations suggest that some features may be irrelevant in the current model. However, they are retained in this example because with a larger dataset (e.g., more than 1,000 synthetic patients), these features might show stronger predictive value.
 
+## How To Run
+### Via Docker Compose
+NOTE: Ensure the steps in Getting Started ^ have been run before this step.
+
+1. Build and start both the API and Streamlit demo containers with a shared network:
+
+```bash
+docker-compose up --build
+```
+Note: This will start two services:
+- Streamlit Demo App accessible at: http://localhost:8501
+
+2. Stop the containers:
+```bash
+docker-compose down
+```
+
+## Tests
+### Unit tests
+1. Run via pytest: `pytest test`
+Note: Tests cover data loading, validation, model training, API endpoints, and other core functionality.
+### Data validation tests (manual)
+1. Run python script to ensure raw data load: `python3 scripts/validate_data.py`
+
+## Project Structure
+- `app/` – Streamlit demo app for interactive model testing  
+- `data/` – Configuration files and raw CSV data (from Synthea)  
+- `data_model/` – DDL scripts for schema creation, table definitions, and data loading  
+- `docker-compose.yml` – Docker Compose config for running API and Streamlit containers  
+- `Dockerfile` – Dockerfile for the FastAPI model serving container  
+- `Dockerfile.streamlit` – Dockerfile for the Streamlit UI container  
+- `.dockerignore` – Excludes unnecessary files from Docker builds  
+- `environment.yml` – Conda environment file with dependencies  
+- `ml_model/` – Directory for saved/serialized trained models  
+- `scripts/` – Utility scripts for data loading, validation, and training  
+- `src/` – Core source code:
+  - `src/api/` – FastAPI app and route definitions  
+  - `src/db/` – DuckDB database connectors and query utilities  
+  - `src/ml/` – Model training, feature engineering, and inference  
+- `test/` – Pytest unit and integration tests  
+- `.gitignore` – Git ignore rules  
+- `README.md` – Project documentation (this file)
 
 ## Data Model
-
 ### Dimension and Fact-like Tables
 
 | Table                          | Type      | Description                                                              |
@@ -86,53 +128,6 @@ conda activate ehrml
 - Although some "fact-like" tables have a `_dim` suffix, the encounter, diagnosis, medication, and procedure tables behave like fact/event tables linked to encounters via surrogate keys. This design enables consistent referencing and flexible querying, while also improving performance in downstream applications as more flexible feature stores and data models can be developed using the integer keys.
 
 - Only a subset of the Synthea dataset is modeled here for demonstration. A full production environment would likely model more clinical domains and additional data.
-
-
-## Project Structure
-
-- `app/` – Streamlit demo app for interactive model testing  
-- `data/` – Configuration files and raw CSV data (from Synthea)  
-- `data_model/` – DDL scripts for schema creation, table definitions, and data loading  
-- `docker-compose.yml` – Docker Compose config for running API and Streamlit containers  
-- `Dockerfile` – Dockerfile for the FastAPI model serving container  
-- `Dockerfile.streamlit` – Dockerfile for the Streamlit UI container  
-- `.dockerignore` – Excludes unnecessary files from Docker builds  
-- `environment.yml` – Conda environment file with dependencies  
-- `ml_model/` – Directory for saved/serialized trained models  
-- `scripts/` – Utility scripts for data loading, validation, and training  
-- `src/` – Core source code:
-  - `src/api/` – FastAPI app and route definitions  
-  - `src/db/` – DuckDB database connectors and query utilities  
-  - `src/ml/` – Model training, feature engineering, and inference  
-- `test/` – Pytest unit and integration tests  
-- `.gitignore` – Git ignore rules  
-- `README.md` – Project documentation (this file)
-
-
-## How To Run
-### Via Docker Compose
-NOTE: Ensure the steps in Getting Started ^ have been run before this step.
-
-1. Build and start both the API and Streamlit demo containers with a shared network:
-
-```bash
-docker-compose up --build
-```
-Note: This will start two services:
-- API Server accessible at: http://localhost:8000
-- Streamlit Demo App accessible at: http://localhost:8501
-
-2. Stop the containers:
-```bash
-docker-compose down
-```
-
-## Tests
-### Unit tests
-1. Run via pytest: `pytest test`
-Note: Tests cover data loading, validation, model training, API endpoints, and other core functionality.
-### Data validation tests (manual)
-1. Run python script to ensure raw data load: `python3 scripts/validate_data.py`
 
 ## Summary
 We created synthetic healthcare data for 1,000 patients using the Synthea project, then modeled this data dimensionally for analytics and built a feature store tailored for readmission prediction. Data was loaded into DuckDB for efficient querying. Two models—logistic regression and XGBoost—were trained and evaluated, selecting the best model for deployment. The system exposes a FastAPI-based prediction endpoint and a Streamlit demo app for easy interaction. The entire stack is containerized with Docker, facilitating easy deployment and testing.
