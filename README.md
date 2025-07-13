@@ -60,7 +60,7 @@ NOTE: Ensure the steps in Getting Started ^ have been run before this step.
 ```bash
 docker-compose up --build
 ```
-Note: This will start two services:
+Note: This will start two services (API and Streamlit):
 - Streamlit Demo App accessible at: http://localhost:8501
 
 2. Stop the containers:
