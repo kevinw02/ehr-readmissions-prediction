@@ -73,7 +73,7 @@ NOTE: Ensure the steps in Getting Started ^ have been run before this step.
 1. Build and start both the API and Streamlit demo containers with a shared network:
 
 ```bash
-docker-compose up --build
+docker-compose up --build -d
 ```
 Note: This will start two services (API and Streamlit):
 - Streamlit Demo App accessible at: http://localhost:8501
