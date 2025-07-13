@@ -34,25 +34,22 @@ Note: In a production or enterprise scenario, the csv data would not be included
 
 ## Getting Started
 
-### 1. Clone the repository
-
+1. Clone the repository:
 ```bash
 git clone https://github.com/YOUR_USERNAME/your-repo-name.git
 cd your-repo-name
 ```
-
-### 2. Create conda environment
-
+2. Create conda environment:
 ```bash
 conda env create -f environment.yml
 conda activate ehrml
 ```
+3. Set PYTHONPATH: `export PYTHONPATH=$PWD/src:$PYTHONPATH`
+4. Load raw data from csv files: `python scripts/load_data.py`
+5. (Optional) Validate raw data load: `python scripts/validate_data.py`
+6. Build data models for dimensional attributes and feature store: `python scripts/build_schema.py`
+7. Build and train ML models for prediction: `python scripts/train_model.py`
 
-### 3. Set PYTHONPATH
-
-```bash
-export PYTHONPATH=$PWD/src:$PYTHONPATH
-```
 
 ## Data Model
 
@@ -111,6 +108,7 @@ export PYTHONPATH=$PWD/src:$PYTHONPATH
 
 ## How To Run
 ### Via Docker Compose
+NOTE: Ensure the steps in Getting Started ^ have been run before this step.
 
 1. Build and start both the API and Streamlit demo containers with a shared network:
 
