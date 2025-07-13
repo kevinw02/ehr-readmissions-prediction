@@ -23,7 +23,6 @@ venv/
 *.swp
 
 # Data artifacts
-*.csv
 *.tsv
 *.parquet
 *.h5
