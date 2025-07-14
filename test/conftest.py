@@ -34,7 +34,7 @@ def setup_test_table(db):
 
 @pytest.fixture
 def setup_dimension_table(db):
-    schema = "dimension"  # Assuming this matches c.Schema.DIMENSION
+    schema = "clinical"
     table = "test_dim"
     key_col = "dim_key"
     label_col = "description"
@@ -42,7 +42,7 @@ def setup_dimension_table(db):
     # Create table
     db.execute(
         f"""
-        CREATE SCHEMA dimension;
+        CREATE SCHEMA clinical;
         CREATE TABLE {schema}.{table} (
             {key_col} INTEGER,
             {label_col} TEXT
