@@ -7,9 +7,9 @@ class Schema:
 
 
 class Table:
-    ETHINICITY_LOOKUP = "ethnicity_lookup"
-    GENDER_LOOKUP = "gender_lookup"
-    RACE_LOOKUP = "race_lookup"
+    ETHINICITY_dim = "ethnicity_dim"
+    GENDER_dim = "gender_dim"
+    RACE_dim = "race_dim"
 
 
 class Column:
