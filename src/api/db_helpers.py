@@ -8,7 +8,7 @@ def load_dimension_mapping(
     table_name: str,
     key_col: str,
     label_col: str = c.Column.DESCRIPTION,
-    schema_name: str = c.Schema.DIMENSION,
+    schema_name: str = c.Schema.CLINICAL,
 ) -> Dict[str, int]:
     """
     Load a dimension mapping table from the database.

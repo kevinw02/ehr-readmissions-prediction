@@ -2,7 +2,8 @@
 
 
 class Schema:
-    DIMENSION = "dimension"
+    CLINICAL = "clinical"
+    READMISSION = "readmission"
 
 
 class Table:
