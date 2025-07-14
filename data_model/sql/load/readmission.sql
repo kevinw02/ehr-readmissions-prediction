@@ -45,38 +45,38 @@ WITH readmitted_flag AS (
       WHEN COUNT(*) > 0 THEN TRUE
       ELSE FALSE
     END AS readmitted
-  FROM dimension.encounter_dim e1
-  JOIN dimension.encounter_dim e2
+  FROM clinical.encounter_dim e1
+  JOIN clinical.encounter_dim e2
     ON e1.patient_key = e2.patient_key
    AND e2.start_date > e1.end_date
    AND e2.start_date <= e1.end_date + INTERVAL '30 days'
    AND e1.encounter_key <> e2.encounter_key
   GROUP BY e1.encounter_key
 ),
-procedure_dim AS (
+procedure_fact AS (
     SELECT
         ed.encounter_key,
         COUNT(DISTINCT pl.procedure_key) AS num_procedures,
         BOOL_OR(pl.description ILIKE '%surgery%') AS had_surgery,
         BOOL_OR(pl.description ILIKE '%biopsy%') AS had_biopsy
-    FROM dimension.encounter_dim ed
-    JOIN dimension.procedure_dim pd ON ed.encounter_key = pd.encounter_key
-    JOIN dimension.procedure_lookup pl ON pd.procedure_key = pl.procedure_key
+    FROM clinical.encounter_dim ed
+    JOIN clinical.procedure_fact pd ON ed.encounter_key = pd.encounter_key
+    JOIN clinical.procedure_dim pl ON pd.procedure_key = pl.procedure_key
     GROUP BY ed.encounter_key
 ),
-medication_dim AS (
+medication_fact AS (
     SELECT
         ed.encounter_key,
         COUNT(DISTINCT ml.medication_key) AS num_meds,
         BOOL_OR(ml.description ILIKE '%anticoagulant%') AS has_anticoagulant,
         BOOL_OR(ml.description ILIKE '%antibiotic%') AS has_antibiotic,
         BOOL_OR(ml.description ILIKE '%steroid%') AS has_steroid
-    FROM dimension.encounter_dim ed
-    JOIN dimension.medication_dim md ON ed.encounter_key = md.encounter_key
-    JOIN dimension.medication_lookup ml ON md.medication_key = ml.medication_key
+    FROM clinical.encounter_dim ed
+    JOIN clinical.medication_fact md ON ed.encounter_key = md.encounter_key
+    JOIN clinical.medication_dim ml ON md.medication_key = ml.medication_key
     GROUP BY ed.encounter_key
 ),
-chronic_dx_dim AS (
+chronic_dx_fact AS (
     SELECT
         ed.encounter_key,
         MAX(CASE WHEN dc.code = 'E11' THEN TRUE ELSE FALSE END) AS has_diabetes,
@@ -90,9 +90,9 @@ chronic_dx_dim AS (
         MAX(CASE WHEN dc.code LIKE 'C%' THEN TRUE ELSE FALSE END) AS has_cancer,
         MAX(CASE WHEN dc.code LIKE 'G30%' THEN TRUE ELSE FALSE END) AS has_alzheimers,
         COUNT(DISTINCT dc.diagnosis_key) AS chronic_dx_count
-    FROM dimension.encounter_dim ed
-    JOIN dimension.diagnosis_dim dd ON ed.encounter_key = dd.encounter_key
-    JOIN dimension.diagnosis_lookup dc ON dd.diagnosis_key = dc.diagnosis_key
+    FROM clinical.encounter_dim ed
+    JOIN clinical.diagnosis_fact dd ON ed.encounter_key = dd.encounter_key
+    JOIN clinical.diagnosis_dim dc ON dd.diagnosis_key = dc.diagnosis_key
     WHERE dc.code IS NOT NULL
     GROUP BY ed.encounter_key
 )
@@ -101,7 +101,7 @@ SELECT
     ed.patient_key,
     ed.start_date,
     ed.end_date,
-    DATE_PART('year', ed.start_date) - DATE_PART('year', pd.birthdate)::INT AS age_at_encounter,
+    EXTRACT(YEAR FROM age(ed.start_date, pd.birthdate))::INT AS age_at_encounter,
     pd.gender_key,
     pd.race_key,
     pd.ethnicity_key,
@@ -128,12 +128,12 @@ SELECT
     COALESCE(p.had_biopsy, FALSE),
 
     COALESCE(rf.readmitted, FALSE)
-FROM dimension.encounter_dim ed
-JOIN dimension.patient_dim pd ON ed.patient_key = pd.patient_key
+FROM clinical.encounter_dim ed
+JOIN clinical.patient_dim pd ON ed.patient_key = pd.patient_key
 LEFT JOIN readmitted_flag rf ON ed.encounter_key = rf.encounter_key
-LEFT JOIN chronic_dx_dim c ON ed.encounter_key = c.encounter_key
-LEFT JOIN medication_dim m ON ed.encounter_key = m.encounter_key
-LEFT JOIN procedure_dim p ON ed.encounter_key = p.encounter_key
+LEFT JOIN chronic_dx_fact c ON ed.encounter_key = c.encounter_key
+LEFT JOIN medication_fact m ON ed.encounter_key = m.encounter_key
+LEFT JOIN procedure_fact p ON ed.encounter_key = p.encounter_key
 ON CONFLICT (encounter_key) DO UPDATE SET
     patient_key = EXCLUDED.patient_key,
     encounter_start = EXCLUDED.encounter_start,
