@@ -126,7 +126,7 @@ CREATE TABLE clinical.encounter_dim (
 );
 
 -- FACTS
--- Diagnosis (for encounter-level diagnosis details)
+-- Diagnosis fact
 CREATE SEQUENCE clinical.diagnosis_fact_key_seq START 1;
 CREATE TABLE clinical.diagnosis_fact (
     diagnosis_fact_key INTEGER PRIMARY KEY DEFAULT nextval('clinical.diagnosis_fact_key_seq'),
@@ -137,7 +137,7 @@ CREATE TABLE clinical.diagnosis_fact (
     diagnosis_end_date DATE
 );
 
--- Medication (for encounter-level medication details)
+-- Medication fact
 CREATE SEQUENCE clinical.medication_fact_key_seq START 1;
 CREATE TABLE clinical.medication_fact (
     medication_fact_key INTEGER PRIMARY KEY DEFAULT nextval('clinical.medication_fact_key_seq'),
@@ -148,7 +148,7 @@ CREATE TABLE clinical.medication_fact (
     medication_end_date DATE
 );
 
--- Procedure dimension (for encounter-level procedure details)
+-- Procedure fact
 CREATE SEQUENCE clinical.procedure_fact_key_seq START 1;
 CREATE TABLE clinical.procedure_fact (
     procedure_fact_key INTEGER PRIMARY KEY DEFAULT nextval('clinical.procedure_fact_key_seq'),

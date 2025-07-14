@@ -79,7 +79,7 @@ SELECT DISTINCT code, description
 FROM staging.procedures s
 WHERE code IS NOT NULL
   AND NOT EXISTS (
-    SELECT 1 FROM clinical.procedure_fact d WHERE d.code = s.code::TEXT
+    SELECT 1 FROM clinical.procedure_dim d WHERE d.code = s.code::TEXT
 );
 
 -- Load Race Dimension
@@ -180,7 +180,7 @@ SELECT DISTINCT
   s.start,
   s.stop
 FROM staging.procedures s
-JOIN clinical.patient_dim pd on s.patient_id = pd.patient_id
+JOIN clinical.patient_dim pd on s.patient = pd.patient_id
 JOIN clinical.encounter_dim ed ON s.encounter = ed.encounter_id
 JOIN clinical.procedure_dim pl ON s.code::TEXT = pl.code
 WHERE NOT EXISTS (
@@ -204,7 +204,7 @@ SELECT DISTINCT
   s.start,
   s.stop
 FROM staging.medications s
-JOIN clinical.patient_dim pd on s.patient_id = pd.patient_id
+JOIN clinical.patient_dim pd on s.patient = pd.patient_id
 JOIN clinical.encounter_dim ed ON s.encounter = ed.encounter_id
 JOIN clinical.medication_dim ml ON s.code::TEXT = ml.code
 WHERE NOT EXISTS (
@@ -228,7 +228,7 @@ SELECT DISTINCT
   s.start,
   s.stop
 FROM staging.conditions s
-JOIN clinical.patient_dim pd on s.patient_id = pd.patient_id
+JOIN clinical.patient_dim pd on s.patient = pd.patient_id
 JOIN clinical.encounter_dim ed ON s.encounter = ed.encounter_id
 JOIN clinical.diagnosis_dim dl ON s.code::TEXT = dl.code
 WHERE NOT EXISTS (
