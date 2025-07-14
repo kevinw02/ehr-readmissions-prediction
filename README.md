@@ -110,37 +110,47 @@ Note: Tests cover data loading, validation, model training, API endpoints, and o
 - `README.md` – Project documentation (this file)
 
 ## Data Model
-### Dimension and Fact-like Tables
 
-| Table                          | Type      | Description                                                              |
-| ------------------------------ | --------- | ------------------------------------------------------------------------ |
-| `dimension.encounter_dim`      | Fact-like | One row per encounter; links to patient and multiple encounter lookups  |
-| `dimension.diagnosis_dim`      | Fact-like | Encounter-level diagnosis details, linked to encounters and diagnoses   |
-| `dimension.medication_dim`     | Fact-like | Encounter-level medication details                                       |
-| `dimension.procedure_dim`      | Fact-like | Encounter-level procedure details                                        |
-| `dimension.patient_dim`        | Dimension | One row per patient; links to gender, race, and ethnicity lookups        |
-
-### Lookup Tables
-
-| Table                          | Type      | Description                                                              |
-| ------------------------------ | --------- | ------------------------------------------------------------------------ |
-| `dimension.encounter_class_lookup` | Lookup | High-level classification of encounter (e.g., inpatient, outpatient)    |
-| `dimension.encounter_code_lookup`  | Lookup | Encounter code with description (e.g., SNOMED-CT encounter type)        |
-| `dimension.reason_code_lookup` | Lookup    | Reason for encounter (code and description)                             |
-| `dimension.diagnosis_lookup`   | Lookup    | Diagnosis codes and descriptions                                        |
-| `dimension.medication_lookup`  | Lookup    | Medication codes and descriptions                                       |
-| `dimension.procedure_lookup`   | Lookup    | Procedure codes and descriptions                                        |
-| `dimension.organization_lookup`| Lookup    | Organizations providing care                                            |
-| `dimension.provider_lookup`    | Lookup    | Providers linked to encounters                                          |
-| `dimension.payer_lookup`       | Lookup    | Insurance payers                                                        |
-| `dimension.gender_lookup`      | Lookup    | Normalized gender values (e.g., male, female, unknown)                   |
-| `dimension.race_lookup`        | Lookup    | Normalized race values                                                   |
-| `dimension.ethnicity_lookup`   | Lookup    | Normalized ethnicity values                                              |
+This model follows a **galaxy schema** pattern, where conformed dimensions (`patient_dim` and `encounter_dim`) are shared across multiple fact tables. It also uses a **snowflake structure** by normalizing lookup values into separate dimension tables.
 
 ---
 
-**Notes:**  
-- Although some "fact-like" tables have a `_dim` suffix, the encounter, diagnosis, medication, and procedure tables behave like fact/event tables linked to encounters via surrogate keys. This design enables consistent referencing and flexible querying, while also improving performance in downstream applications as more flexible feature stores and data models can be developed using the integer keys.
+### Conformed Dimensions (Shared)
+
+| Table                     | Type       | Description                                                                 |
+|--------------------------|------------|-----------------------------------------------------------------------------|
+| `clinical.patient_dim`   | Dimension  | One row per patient; links to gender, race, and ethnicity dimensions       |
+| `clinical.encounter_dim` | Fact-like  | One row per encounter; links to patient, encounter class/code, reason, etc.|
+
+---
+
+### Fact Tables (Galaxy Core)
+
+| Table                      | Type  | Description                                                                 |
+|---------------------------|--------|-----------------------------------------------------------------------------|
+| `clinical.diagnosis_fact` | Fact  | Encounter-level diagnosis facts; links to diagnosis codes and patient/encounter |
+| `clinical.medication_fact`| Fact  | Encounter-level medication facts; links to medication codes and patient/encounter |
+| `clinical.procedure_fact` | Fact  | Encounter-level procedure facts; links to procedure codes and patient/encounter |
+
+---
+
+### Snowflaked Lookup Dimensions
+
+| Table                          | Type      | Description                                                                 |
+|--------------------------------|-----------|-----------------------------------------------------------------------------|
+| `clinical.gender_dim`          | Dimension | Normalized gender values (e.g., male, female, unknown)                      |
+| `clinical.race_dim`            | Dimension | Normalized race values                                                      |
+| `clinical.ethnicity_dim`       | Dimension | Normalized ethnicity values                                                 |
+| `clinical.encounter_class_dim` | Dimension | High-level classification of encounters (e.g., inpatient, outpatient)      |
+| `clinical.encounter_code_dim`  | Dimension | Encounter code and description (e.g., SNOMED-CT codes)                     |
+| `clinical.reason_code_dim`     | Dimension | Reason for visit codes and descriptions                                     |
+| `clinical.diagnosis_dim`       | Dimension | Diagnosis code and description (e.g., ICD-10)                               |
+| `clinical.medication_dim`      | Dimension | Medication code and description                                             |
+| `clinical.procedure_dim`       | Dimension | Procedure code and description                                              |
+| `clinical.organization_dim`    | Dimension | Organizations providing care                                                |
+| `clinical.provider_dim`        | Dimension | Providers (e.g., physicians) associated with encounters                     |
+| `clinical.payer_dim`           | Dimension | Insurance payers                                                            |
+
 
 - Only a subset of the Synthea dataset is modeled here for demonstration. A full production environment would likely model more clinical domains and additional data.
 
