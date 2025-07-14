@@ -28,7 +28,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SQL_DIR = os.path.join(SCRIPT_DIR, "..", "data_model", "sql")
 DEFAULT_SQL_FILES = [
     "model",
-    "load/dimension.sql",
+    "load/clinical.sql",
     "load/readmission.sql",
 ]
 
