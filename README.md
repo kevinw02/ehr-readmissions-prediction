@@ -14,7 +14,7 @@ Note: In a production or enterprise scenario, the csv data would not be included
 - CLI utility to load CSV data into DuckDB from YAML configuration
 - Support for schema tracking and reproducible ingestion
 - Easily extendable for ML workflows and exploratory data analysis
-- Dimensional data modeling of healthcare data generated via Synthea
+- Galaxy data modeling of healthcare data with snowflake normalization
 - Feature store specifically designed for patient readmission prediction
 - Training and evaluation of Logistic Regression and XGBoost models
 - REST API for serving predictions built with FastAPI
