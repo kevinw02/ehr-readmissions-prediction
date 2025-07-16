@@ -7,9 +7,9 @@ class Schema:
 
 
 class Table:
-    ETHINICITY_dim = "ethnicity_dim"
-    GENDER_dim = "gender_dim"
-    RACE_dim = "race_dim"
+    ETHINICITY_DIM = "ethnicity_dim"
+    GENDER_DIM = "gender_dim"
+    RACE_DIM = "race_dim"
 
 
 class Column:
