@@ -14,6 +14,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Constants
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Note: this is hardcoded for simplicity; in production, consider using environment variables or config files.
 DEFAULT_MODEL_PATH = os.path.join(MODULE_DIR, "..", "..", "ml_model", "xgboost_readmission_model.joblib")
 
 

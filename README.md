@@ -72,6 +72,7 @@ NOTE: Ensure the steps in Getting Started ^ have been run before this step.
 
 1. Build and start both the API and Streamlit demo containers with a shared network:
 
+Note: You must have saved a model by this step. If no model is saved, run: `python scripts/train_model.py` and input 'y'.
 ```bash
 docker-compose up --build -d
 ```
