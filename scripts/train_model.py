@@ -36,7 +36,7 @@ FEATURES = [
 ]
 
 logging.basicConfig(level=logging.INFO)
-_LOGGER = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 def _arg_parse():
@@ -79,16 +79,16 @@ if __name__ == "__main__":
     if auc_xgb > auc_lr:
         best_model = best_xgb
         model_name = "xgboost_readmission_model.joblib"
-        _LOGGER.info("XGBoost selected as best model.")
+        _logger.info("XGBoost selected as best model.")
         explain_model(best_model, X_train, X_test, model_type="xgboost")
     else:
         best_model = best_lr
         model_name = "logreg_readmission_model.joblib"
-        _LOGGER.info("Logistic Regression selected as best model.")
+        _logger.info("Logistic Regression selected as best model.")
         explain_model(best_model, X_train, X_test, model_type="logreg")
 
     save_input = input("Save model? (y/n): ").strip().lower()
     if save_input == "y":
         save_model(best_model, MODEL_DIR, model_name)
     else:
-        _LOGGER.info("Model not saved.")
+        _logger.info("Model not saved.")

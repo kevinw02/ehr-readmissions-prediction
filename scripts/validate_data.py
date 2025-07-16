@@ -20,7 +20,7 @@ DEFAULT_TABLES = [
     "encounters",
 ]
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 logging.basicConfig(
     level=logging.INFO,  # Set minimum level to INFO
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -80,7 +80,7 @@ def _check_table_exists(conn, schema_name: str, table_name: str) -> bool:
     try:
         return conn.execute(query).iloc[0, 0] > 0
     except Exception as e:
-        logger.info(f"❌ check_table_exists failed: {e}")
+        _logger.info(f"❌ check_table_exists failed: {e}")
         return False
 
 
@@ -116,12 +116,12 @@ def _preview_table(conn, schema_name: str, table_name: str, limit: int):
     returns: None
     """
     query = f"SELECT * FROM {schema_name}.{table_name} LIMIT {limit}"
-    logger.info(f"\n📋 Previewing {schema_name}.{table_name}:")
+    _logger.info(f"\n📋 Previewing {schema_name}.{table_name}:")
     try:
         df = conn.execute(query)
-        logger.info(df)
+        _logger.info(df)
     except Exception as e:
-        logger.info(f"❌ Error reading {table_name}: {e}")
+        _logger.info(f"❌ Error reading {table_name}: {e}")
 
 
 if __name__ == "__main__":
