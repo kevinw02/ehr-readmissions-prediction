@@ -1,11 +1,17 @@
+"""
+SHAP (SHapley Additive exPlanations) is a unified approach to explain the output of any machine learning model.
+This module provides functionality to generate and visualize SHAP values for model interpretability.
+"""
+
 import numpy as np
 import pandas as pd
 import shap
 from typing import Union
+from sklearn.base import BaseEstimator
 
 
 def explain_model(
-    model: object,
+    model: Union[BaseEstimator, object],
     X_train: Union[pd.DataFrame, np.ndarray],
     X_test: Union[pd.DataFrame, np.ndarray],
     model_type: str = "logreg",
@@ -13,28 +19,31 @@ def explain_model(
     """
     Generate and plot SHAP explanations for a given model and dataset.
 
-    params:
-        model: Trained machine learning model object.
-            For 'xgboost' model_type, should be an XGBoost model compatible with shap.Explainer.
-            For other models, should be compatible with shap.LinearExplainer.
-        X_train: Training dataset used to initialize the SHAP explainer.
-        X_test: Test dataset for which SHAP values are computed.
-        model_type: Type of model. Determines which SHAP explainer to use.
-            Supported values are "logreg" (default) and "xgboost".
+    Parameters:
+        model (BaseEstimator or object): Trained model.
+            - For 'xgboost', must be compatible with shap.Explainer.
+            - For others (e.g., logistic regression), must be compatible with shap.LinearExplainer.
+        X_train (DataFrame or ndarray): Training data for explainer fitting.
+        X_test (DataFrame or ndarray): Test data for SHAP value computation.
+        model_type (str): One of {"logreg", "xgboost"}. Determines which SHAP explainer to use.
 
-    returns: None: This function produces a SHAP summary plot as a side effect.
+    Returns:
+        None. Displays a SHAP summary plot.
 
     Notes:
-        - For "logreg" (or other non-XGBoost models), LinearExplainer with 'interventional' perturbation is used.
-        - For "xgboost", the general Explainer is used.
-        - The SHAP summary plot visualizes feature importance and impact.
+        - "logreg" uses shap.LinearExplainer with interventional perturbation.
+        - "xgboost" uses shap.Explainer directly.
     """
     if model_type == "xgboost":
         explainer = shap.Explainer(model)
-    else:
+        shap_values = explainer(X_test)
+    elif model_type == "logreg":
         explainer = shap.LinearExplainer(
             model, X_train, feature_perturbation="interventional"
         )
-    shap_values = explainer.shap_values(X_test)
-    shap_values = np.array(shap_values, dtype=np.float64)
+        shap_values = explainer.shap_values(X_test)
+        shap_values = np.array(shap_values, dtype=np.float64)
+    else:
+        raise ValueError(f"Unsupported model_type: {model_type}")
+
     shap.summary_plot(shap_values, X_test)
