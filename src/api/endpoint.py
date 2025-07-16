@@ -78,10 +78,10 @@ def load_all_mappings():
     conn = create_db_connection(config)
 
     global GENDER_MAP, RACE_MAP, ETHNICITY_MAP
-    GENDER_MAP = load_dimension_mapping(conn, c.Table.GENDER_dim, c.Column.GENDER_KEY)
-    RACE_MAP = load_dimension_mapping(conn, c.Table.RACE_dim, c.Column.RACE_KEY)
+    GENDER_MAP = load_dimension_mapping(conn, c.Table.GENDER_DIM, c.Column.GENDER_KEY)
+    RACE_MAP = load_dimension_mapping(conn, c.Table.RACE_DIM, c.Column.RACE_KEY)
     ETHNICITY_MAP = load_dimension_mapping(
-        conn, c.Table.ETHINICITY_dim, c.Column.ETHNICITY_KEY
+        conn, c.Table.ETHINICITY_DIM, c.Column.ETHNICITY_KEY
     )
 
 
