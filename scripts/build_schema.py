@@ -33,7 +33,7 @@ DEFAULT_SQL_FILES = [
 ]
 
 logging.basicConfig(level=logging.INFO)
-_LOGGER = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 def _arg_parse():
@@ -86,18 +86,18 @@ def _get_sql_files(base_dir, paths):
         elif os.path.isfile(abs_path) and abs_path.endswith(".sql"):
             sql_files.append(abs_path)
         else:
-            _LOGGER.warning(f"Skipping invalid or non-SQL path: {abs_path}")
+            _logger.warning(f"Skipping invalid or non-SQL path: {abs_path}")
     return sql_files
 
 
 def _execute_sql_files(conn, sql_files):
     for sql_file in sql_files:
         if not os.path.isfile(sql_file):
-            _LOGGER.warning(f"SQL file {sql_file} does not exist. Skipping.")
+            _logger.warning(f"SQL file {sql_file} does not exist. Skipping.")
             continue
-        _LOGGER.info(f"Executing {sql_file} ...")
+        _logger.info(f"Executing {sql_file} ...")
         conn.execute_file(sql_file, ddl=True)
-    _LOGGER.info(f"✅ Successfully executed {len(sql_files)} SQL files.")
+    _logger.info(f"✅ Successfully executed {len(sql_files)} SQL files.")
 
 
 if __name__ == "__main__":

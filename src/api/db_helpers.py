@@ -1,3 +1,6 @@
+"""
+Database helper functions for loading dimension mappings.
+"""
 import db.constant as c
 from typing import Dict
 from db.connection import DBConnection
@@ -13,14 +16,13 @@ def load_dimension_mapping(
     """
     Load a dimension mapping table from the database.
 
-    Args:
-        conn (DBConnection): Database connection object.
-        table_name (str): Name of the dimension table.
-        key_col (str): Column name for the key (integer).
-        label_col (str): Column name for the label (string).
+    params:
+        conn: Database connection object.
+        table_name: Name of the dimension table.
+        key_col: Column name for the key (integer).
+        label_col: Column name for the label (string).
 
-    Returns:
-        Dict[str, int]: Mapping from label (lowercase) to key.
+    Returns: Mapping from label (lowercase) to key.
     """
     query = f"SELECT {label_col}, {key_col} FROM {schema_name}.{table_name}"
     df = conn.execute(query)

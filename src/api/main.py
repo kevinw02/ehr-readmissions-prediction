@@ -1,6 +1,10 @@
-from fastapi import FastAPI
+"""
+Main API entry point for the Readmission Predictor service.
+"""
+
 from api.endpoint import router, load_all_mappings
 from contextlib import asynccontextmanager
+from fastapi import FastAPI
 
 
 @asynccontextmanager
