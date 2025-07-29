@@ -135,7 +135,7 @@ This model follows a **galaxy schema** pattern, where conformed dimensions (`pat
 
 ---
 
-### Snowflaked Lookup Dimensions
+### Dimensions (Snowflake and Lookup)
 
 | Table                          | Type      | Description                                                                 |
 |--------------------------------|-----------|-----------------------------------------------------------------------------|
