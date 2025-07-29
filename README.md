@@ -156,7 +156,7 @@ This model follows a **galaxy schema** pattern, where conformed dimensions (`pat
 - Only a subset of the Synthea dataset is modeled here for demonstration. A full production environment would likely model more clinical domains and additional data.
 
 ## Summary
-Synthetic healthcare data was created for 1,000 patients using the Synthea project, then modeled this data dimensionally for analytics and built a feature store tailored for readmission prediction. Data was loaded into DuckDB for efficient querying. Two models—logistic regression and XGBoost—were trained and evaluated, selecting the best model for deployment. The system exposes a FastAPI-based prediction endpoint and a Streamlit demo app for easy interaction. The entire stack is containerized with Docker, facilitating easy deployment and testing.
+Synthetic healthcare data was created for 1,000 patients using the Synthea project, modeled dimensionally for analytics, and implemented as a feature store tailored for readmission prediction. Data was loaded into DuckDB for efficient querying. Two models—logistic regression and XGBoost—were trained and evaluated, selecting the best model for deployment. The system exposes a FastAPI-based prediction endpoint and a Streamlit demo app for easy interaction. The entire stack is containerized with Docker, facilitating easy deployment and testing.
 
 ## Contributions and Support
 Contributions are welcome via issues or pull requests.
